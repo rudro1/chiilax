@@ -1,3 +1,62 @@
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "root";
+$dbname="login_register";
+// Create connection
+$conn = new mysqli($servername, $username, $password,$dbname);
+
+// Check connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+?>
+<?php
+
+$message = "";
+$toastClass = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_POST['email'];
+    $password = $_POST['Password'];
+
+    // Prepare and execute
+    $stmt = $conn->prepare("SELECT Password FROM login_register WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($db_password);
+        $stmt->fetch();
+
+        if ($password === $db_password) {
+            $message = "Login successful";
+            $toastClass = "bg-success";
+            // Start the session and redirect to the dashboard or home page
+            session_start();
+            $_SESSION['email'] = $email;
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            $message = "Incorrect password";
+            $toastClass = "bg-danger";
+        }
+    } else {
+        $message = "Email not found";
+        $toastClass = "bg-warning";
+    }
+
+    $stmt->close();
+    $conn->close();
+}
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,726 +66,274 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
 	<title>chill and relax</title>
-    <link rel="icon" href="images/chillax.png" type="image/png" sizes="16x16"> 
+    <link rel="icon" href="images/icon.png" type="image/png" sizes="48x48"> 
     
     <link rel="stylesheet" href="css/main.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/color.css">
     <link rel="stylesheet" href="css/responsive.css">
 
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap" rel="stylesheet">
+<style>
+
+.parkinsans {
+  font-family: "Parkinsans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight:500;
+  font-style: normal;
+  text-align: center;
+  font-size: 40px !important;
+  color: rgb(249, 48, 34);
+  
+
+}
+.div#text1 {
+    color: #763bb1;
+
+    font-weight: 500;
+}
+
+.dynamic-text {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+			text-transform: capitalize;
+		
+        }
+	
+	
+.body_back{
+
+    background-size: cover;
+    backdrop-filter: none;
+    background-repeat: no-repeat;
+    background-color: bisque !important;
+}
+
+
+.row {
+            height: 50%; /* Each row takes up one-third of the viewport height */
+        }
+        .box {
+            background-color: rgba(255, 255, 255, 0.991);
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.295);
+            text-align: center;
+			border-left: 1px solid #0056b3;
+			font-weight: 500;
+		
+			
+        }
+		.box h2 {
+    font-size: 40px;
+    color: cornflowerblue;
+    font-weight: 800;
+    font-family: ui-monospace;
+    letter-spacing: 12px;
+    text-transform: uppercase;
+}
+.box p {
+    font-size: 18px;
+    color: #8a642d;
+    letter-spacing: 1px;
+    font-weight: 500;
+    font-family: auto;
+}
+        .btn-custom {
+            border: none;
+            padding: 10px 20px;
+			
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+		.btn-login {
+    background-color: red;
+    color: white;
+    margin-right: 10px;
+   
+    padding: 10px 45px;
+}
+.btn-signup{
+    padding: 10px 45px;
+}
+        .btn-login:hover {
+            background-color: #0056b3;
+        }
+        .btn-signup {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-signup:hover {
+            background-color: #218838;
+        }
+      
+
+.footer-design{}
+
+.footer_back{
+	background-image: url("./images/logo1.png") !important;
+	background-repeat:repeat;
+	background-size: cover;
+}
+.vstr{
+    background-color: #763bb1;
+}
+
+.vstr:hover {
+            background-color: white;
+            border: 3px solid blue;
+            border-radius: 3px solid blue;
+        color: #0056b3;
+
+        }
+@media (min-width: 576px) {
+            .btn-custom {
+                width: auto; /* Buttons have auto width on medium screens */
+           
+			margin-bottom: 10px;
+			}
+        }
+</style>
 </head>
-<body class="news">
+<body class="">
 <!--<div class="se-pre-con"></div>-->
 <div class="theme-layout">
-	
-	<div class="responsive-header">
-		<div class="mh-head first Sticky">
-			<span class="mh-btns-left">
-				<a class="" href="#menu"><i class="fa fa-align-justify"></i></a>
-			</span>
-			
-			<span class="mh-btns-right">
-				<a class="fa fa-sliders" href="#shoppingbag"></a>
-			</span>
-		</div>
-		
-		<nav id="menu" class="res-menu">
-			<ul>
-				<li><span>Home</span>
-					<ul>
-						
-						<li><a href="landing.html" title="">Login page</a></li>
-						<li><a href="logout.html" title="">Logout Page</a></li>
+	<div class="container-fluid pdng0">
+		<div class="row merged">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+				<div class="land-featurearea">
+
 					
-					</ul>
-				</li>
-			
-			
-			</ul>
-		</nav>
-		<nav id="shoppingbag">
-			<div>
-				<div class="">
-					<form method="post">
-						<div class="setting-row">
-							<span>use night mode</span>
-							<input type="checkbox" id="nightmode"/> 
-							<label for="nightmode" data-on-label="ON" data-off-label="OFF"></label>
-						</div>
-						<div class="setting-row">
-							<span>Notifications</span>
-							<input type="checkbox" id="switch2"/> 
-							<label for="switch2" data-on-label="ON" data-off-label="OFF"></label>
-						</div>
-						<div class="setting-row">
-							<span>Notification sound</span>
-							<input type="checkbox" id="switch3"/> 
-							<label for="switch3" data-on-label="ON" data-off-label="OFF"></label>
-						</div>
-						<div class="setting-row">
-							<span>My profile</span>
-							<input type="checkbox" id="switch4"/> 
-							<label for="switch4" data-on-label="ON" data-off-label="OFF"></label>
-						</div>
-						<div class="setting-row">
-							<span>Show profile</span>
-							<input type="checkbox" id="switch5"/> 
-							<label for="switch5" data-on-label="ON" data-off-label="OFF"></label>
-						</div>
-					</form>
-					
-				</div>
-			</div>
-		</nav>
-	</div><!-- responsive header -->
-	
-	<div class="topbar stick">
-		<div class="logo imgs">
-			<a title="" href="index.html"><img src="images/chillax.png" alt=""></a>
-		</div>
-		
-		<div class="top-area">
-			
-		
-				
-			<span class="ti-menu main-menu" data-ripple=""></span> 
-		</div>
-	</div><!-- topbar -->
-		
-	<section>
-		<div class="gap gray-bg">
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-lg-12">
-						<div class="row" id="page-contents">
-						
-							<div class="col-lg-9">
-								<div class="central-meta">
-									<div class="new-postbox">
-									
-										<div class="newpst-input">
-											<form method="post">
-												<textarea rows="2" placeholder="write something"></textarea>
-												<div class="attachments">
-													<ul>
-														
-													
-														<li>
-															<button type="submit">Post</button>
-														</li>
-													</ul>
-												</div>
-											</form>
-										</div>
-									</div>
-								</div><!-- add post new box -->
-								<div class="loadMore">
-								<div class="central-meta item">
-									<div class="user-post">
-										<div class="friend-info">
-											
-											<div class="friend-name">
-												<ins><a href="time-line.html" title="">Bondhon Kumer</a></ins>
-												<span>published: june,2 2018 19:PM</span>
-											</div>
-											<div class="post-meta">
-											
-												<h1>বিষন্নতা</h1>
-<p>
-	শান্তনা ভাল্লাগেনা । যেমনটা ভাল্লাগেনা পেট ভর্তি খিদে নিয়ে দুপুর ১ টার ক্লাস। খুবই ক্লান্ত লাগে নিজেকে ঠিক শীতের পরে বসন্তের নেতিয়ে পড়া এক বিকেল অথবা সন্ধ্যায় কোন চায়ের দোকানে বসে এক আধটা সিগারেট জালিয়ে আবার নিভিয়ে ফেলে দেওয়া।আমি তো চেয়েছিলাম এক স্নিগ্ধ শীতল মাঠের মাঝখানে যেমন টা হারিয়ে যায় ছোট্ট একটা বালক। প্রখর রোদে পিঠ পোড়াতেও ভালো লাগে যদি ভালোবাসা থাকে। তবুও শান্তনা ভালো লাগে না😅।  গান করি ভালো লাগে কিন্তু আমিতো আবার গিটারে টুংটাং সুর বাজাতে ব্যার্থ 😅। এমনি মনে মনে গুন গুন এই আর কি। সাদের বাগানের নেতিয়ে পড়া বেলি ফুলের গাছটা আর নেই। সব গাছ গুলোর একটা অনন্য বৈশিষ্ট্য আছে। কেন জানিনা তারা কোন সার্থ ছাড়া সারাজীবন ভালোবেসে যেতে পারে। প্রকৃত প্রেমিক তো গাছই। আমরা ভেসে এসেছিলাম সেই দীর্ঘপথ ধরে, চলে যাবো আবার অজানা কোন এক গন্তব্যে।রাস্তায় আবারও কারো চোখের মায়ায় পড়বো, আবার ভালোবাসবো আবার আমাদের হৃদয় ভাঙ্গার গল্প হবে। তবুও চলতেই থাকবো কখনও পিছনে তাকানোর সাহস যদি হয় বুঝে নিও সে আর মানুষ নেই সে গাছ হয়ে গেছে। আকাশ হতে চায়না কারন আমার তো আর তার মতো এতো কিছু দেওয়ার মতো কিছু নেই।😅 শুন্যতার পথচারী সবসময় নাহয় শুন্যতায় খুজে যাবো🖤........
-</p>
-
-
-												<div class="we-video-info">
-													<ul>
-														<li>
-															<span class="views" data-toggle="tooltip" title="views">
-																<i class="fa fa-eye"></i>
-																<ins>1.2k</ins>
-															</span>
-														</li>
-														<li>
-															<span class="comment" data-toggle="tooltip" title="Comments">
-																<i class="fa fa-comments-o"></i>
-																<ins>52</ins>
-															</span>
-														</li>
-														<li>
-															<span class="like" data-toggle="tooltip" title="like">
-																<i class="ti-heart"></i>
-																<ins>2.2k</ins>
-															</span>
-														</li>
-														
-														<li class="social-media">
-															<div class="menu">
-															  <div class="btn btn-danger trigger"><i class="fa fa-share-alt"></i></div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-html5"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-facebook"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-google-plus"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-twitter"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-css3"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-instagram"></i></a>
-																</div>
-															  </div>
-																<div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-dribbble"></i></a>
-																</div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-pinterest"></i></a>
-																</div>
-															  </div>
-
-															</div>
-														</li>
-													</ul>
-												</div>
-												<div class="description">
-													
-													<p>
-														World's most beautiful car in Curabitur <a href="#" title="">#test drive booking !</a> the most beatuiful car available in america and the saudia arabia, you can book your test drive by our official website
-													</p>
-												</div>
-											</div>
-										</div>
-										<div class="coment-area">
-											<ul class="we-comet">
-												<li>
-												
-													<div class="we-comment">
-														<div class="coment-head">
-															<h5><a href="time-line.html" title="">Jason borne</a></h5>
-															<span>1 year ago</span>
-															<a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-														</div>
-														<p>we are working for the dance and sing songs. this car is very awesome for the youngster. please vote this car and like our post</p>
-													</div>
-													<ul>
-														<li>
-															
-															<div class="we-comment">
-																<div class="coment-head">
-																	<h5><a href="time-line.html" title="">alexendra dadrio</a></h5>
-																	<span>1 month ago</span>
-																	<a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-																</div>
-																<p>yes, really very awesome car i see the features of this car in the official website of <a href="#" title="">#Mercedes-Benz</a> and really impressed :-)</p>
-															</div>
-														</li>
-														<li>
-															
-															<div class="we-comment">
-																<div class="coment-head">
-																	<h5><a href="time-line.html" title="">Olivia</a></h5>
-																	<span>16 days ago</span>
-																	<a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-																</div>
-																<p>i like lexus cars, lexus cars are most beautiful with the awesome features, but this car is really outstanding than lexus</p>
-															</div>
-														</li>
-													</ul>
-												</li>
-												<li>
-												
-													<div class="we-comment">
-														<div class="coment-head">
-															<h5><a href="time-line.html" title="">Donald Trump</a></h5>
-															<span>1 week ago</span>
-															<a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-														</div>
-														<p>we are working for the dance and sing songs. this video is very awesome for the youngster. please vote this video and like our channel
-															<i class="em em-smiley"></i>
-														</p>
-													</div>
-												</li>
-												<li>
-													<a href="#" title="" class="showmore underline">more comments</a>
-												</li>
-												<li class="post-comment">
-												
-													<div class="post-comt-box">
-														<form method="post">
-															<textarea placeholder="Post your comment"></textarea>
-															<div class="add-smiles">
-																<span class="em em-expressionless" title="add icon"></span>
-															</div>
-															<div class="smiles-bunch">
-																<i class="em em---1"></i>
-																<i class="em em-smiley"></i>
-																<i class="em em-anguished"></i>
-																<i class="em em-laughing"></i>
-																<i class="em em-angry"></i>
-																<i class="em em-astonished"></i>
-																<i class="em em-blush"></i>
-																<i class="em em-disappointed"></i>
-																<i class="em em-worried"></i>
-																<i class="em em-kissing_heart"></i>
-																<i class="em em-rage"></i>
-																<i class="em em-stuck_out_tongue"></i>
-															</div>
-															<button type="submit"></button>
-														</form>	
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-
-									<div class="user-post">
-										<div class="friend-info">
-											
-											<div class="friend-name">
-												<ins><a href="time-line.html" title="">Bondhon Kumer</a></ins>
-												<span>published: june,2 2018 19:PM</span>
-											</div>
-											<div class="post-meta">
-											
-												<h1>মমতাদি</h1>
-<p>
-	শান্তনা ভাল্লাগেনা । যেমনটা ভাল্লাগেনা পেট ভর্তি খিদে নিয়ে দুপুর ১ টার ক্লাস। খুবই ক্লান্ত লাগে নিজেকে ঠিক শীতের পরে বসন্তের নেতিয়ে পড়া এক বিকেল অথবা সন্ধ্যায় কোন চায়ের দোকানে বসে এক আধটা সিগারেট জালিয়ে আবার নিভিয়ে ফেলে দেওয়া।আমি তো চেয়েছিলাম এক স্নিগ্ধ শীতল মাঠের মাঝখানে যেমন টা হারিয়ে যায় ছোট্ট একটা বালক। প্রখর রোদে পিঠ পোড়াতেও ভালো লাগে যদি ভালোবাসা থাকে। তবুও শান্তনা ভালো লাগে না😅।  গান করি ভালো লাগে কিন্তু আমিতো আবার গিটারে টুংটাং সুর বাজাতে ব্যার্থ 😅। এমনি মনে মনে গুন গুন এই আর কি। সাদের বাগানের নেতিয়ে পড়া বেলি ফুলের গাছটা আর নেই। সব গাছ গুলোর একটা অনন্য বৈশিষ্ট্য আছে। কেন জানিনা তারা কোন সার্থ ছাড়া সারাজীবন ভালোবেসে যেতে পারে। প্রকৃত প্রেমিক তো গাছই। আমরা ভেসে এসেছিলাম সেই দীর্ঘপথ ধরে, চলে যাবো আবার অজানা কোন এক গন্তব্যে।রাস্তায় আবারও কারো চোখের মায়ায় পড়বো, আবার ভালোবাসবো আবার আমাদের হৃদয় ভাঙ্গার গল্প হবে। তবুও চলতেই থাকবো কখনও পিছনে তাকানোর সাহস যদি হয় বুঝে নিও সে আর মানুষ নেই সে গাছ হয়ে গেছে। আকাশ হতে চায়না কারন আমার তো আর তার মতো এতো কিছু দেওয়ার মতো কিছু নেই।😅 শুন্যতার পথচারী সবসময় নাহয় শুন্যতায় খুজে যাবো🖤........
-</p>
-
-
-												<div class="we-video-info">
-													<ul>
-														<li>
-															<span class="views" data-toggle="tooltip" title="views">
-																<i class="fa fa-eye"></i>
-																<ins>1.2k</ins>
-															</span>
-														</li>
-														<li>
-															<span class="comment" data-toggle="tooltip" title="Comments">
-																<i class="fa fa-comments-o"></i>
-																<ins>52</ins>
-															</span>
-														</li>
-														<li>
-															<span class="like" data-toggle="tooltip" title="like">
-																<i class="ti-heart"></i>
-																<ins>2.2k</ins>
-															</span>
-														</li>
-														
-														<li class="social-media">
-															<div class="menu">
-															  <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-html5"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-facebook"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-google-plus"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-twitter"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-css3"></i></a></div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-instagram"></i></a>
-																</div>
-															  </div>
-																<div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-dribbble"></i></a>
-																</div>
-															  </div>
-															  <div class="rotater">
-																<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-pinterest"></i></a>
-																</div>
-															  </div>
-
-															</div>
-														</li>
-													</ul>
-												</div>
-												<div class="description">
-													
-													<p>
-														World's most beautiful car in Curabitur <a href="#" title="">#test drive booking !</a> the most beatuiful car available in america and the saudia arabia, you can book your test drive by our official website
-													</p>
-												</div>
-											</div>
-										</div>
-										<div class="coment-area">
-											<ul class="we-comet">
-												<li>
-												
-													<div class="we-comment">
-														<div class="coment-head">
-															<h5><a href="time-line.html" title="">Jason borne</a></h5>
-															<span>1 year ago</span>
-															<a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-														</div>
-														<p>we are working for the dance and sing songs. this car is very awesome for the youngster. please vote this car and like our post</p>
-													</div>
-													<ul>
-														<li>
-															
-															<div class="we-comment">
-																<div class="coment-head">
-																	<h5><a href="time-line.html" title="">alexendra dadrio</a></h5>
-																	<span>1 month ago</span>
-																	<a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-																</div>
-																<p>yes, really very awesome car i see the features of this car in the official website of <a href="#" title="">#Mercedes-Benz</a> and really impressed :-)</p>
-															</div>
-														</li>
-														<li>
-															
-															<div class="we-comment">
-																<div class="coment-head">
-																	<h5><a href="time-line.html" title="">Olivia</a></h5>
-																	<span>16 days ago</span>
-																	<a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-																</div>
-																<p>i like lexus cars, lexus cars are most beautiful with the awesome features, but this car is really outstanding than lexus</p>
-															</div>
-														</li>
-													</ul>
-												</li>
-												<li>
-												
-													<div class="we-comment">
-														<div class="coment-head">
-															<h5><a href="time-line.html" title="">Donald Trump</a></h5>
-															<span>1 week ago</span>
-															<a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-														</div>
-														<p>we are working for the dance and sing songs. this video is very awesome for the youngster. please vote this video and like our channel
-															<i class="em em-smiley"></i>
-														</p>
-													</div>
-												</li>
-												<li>
-													<a href="#" title="" class="showmore underline">more comments</a>
-												</li>
-												<li class="post-comment">
-												
-													<div class="post-comt-box">
-														<form method="post">
-															<textarea placeholder="Post your comment"></textarea>
-															<div class="add-smiles">
-																<span class="em em-expressionless" title="add icon"></span>
-															</div>
-															<div class="smiles-bunch">
-																<i class="em em---1"></i>
-																<i class="em em-smiley"></i>
-																<i class="em em-anguished"></i>
-																<i class="em em-laughing"></i>
-																<i class="em em-angry"></i>
-																<i class="em em-astonished"></i>
-																<i class="em em-blush"></i>
-																<i class="em em-disappointed"></i>
-																<i class="em em-worried"></i>
-																<i class="em em-kissing_heart"></i>
-																<i class="em em-rage"></i>
-																<i class="em em-stuck_out_tongue"></i>
-															</div>
-															<button type="submit"></button>
-														</form>	
-													</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-
-
-
-									<div class="friend-name">
-										<ins><a href="time-line.html" title="">Bondhon Kumer</a></ins>
-										<span>published: june,2 2018 19:PM</span>
-									</div>
-									<div class="post-meta">
-											
-										<h1>তোমার উপস্থিতি</h1>
-<p>
-	আবারও তোমাকে দেখলাম।তোমাকে প্রতিদিনই দেখি আসলে প্রতিদিন বললে হয়তো ভুল হবে, প্রতি মিনিট, প্রতিটা সেকেন্ডে তোমার ঐ নিষ্পাপ মুখটা আমার কল্পনার দেয়ালে ভেসে ভেসে উঠে। 😑💙 কি করবো বলো শত চেষ্টা করেও ঐ মুখটা মুছতে পারিনা ভেতর থেকে।কান্না জমে যায় কথায় কথায়। আবরও সেই কান্না কে বুকে চেপে রাখি। যদি কেঁদে ফেলি তাহলে হয়তো আবছা হয়ে যাবে তোমার মুখটা। 🌸 তাই ভয় লাগে। তুলনাহীনা তুমি আমার কাছে। তোমাকে বুঝিনা আমি সত্যিই প্রিয়ো।🌼 বুঝলে হয়তো নিজের করে পেতাম। 🙂 সূর্যমুখিদের দিকে তাকালেও আজকাল তোমাকে দেখি। ছাদের ফুলটা ফুটলো আবার শুকিয়ে গেল। কিন্তু তোমাকে দেওয়ার সাহসটা হয়ে উঠলো না। আমি আবারও বিমোহিত হয়ে গেলাম। নতুন করে প্রেমে পড়লাম 😄💙 তোমার একরাশ ঝর্ণার মতো চুল গুলো যখন বাতাসে উরে যায় তখন আমার ভিতরের শান্ত সাগরের জলও খুব ভয়ংকর ভাবে তোলপাড় শুরু করে। 😇💙 কাউকে বলতে পারিনা, বোঝাতেও পারিনা কতটা তোমায় ভালোবাসি। যখন তোমার সাথে কথা হয় তখন মনে হয় যেন এক তীব্র গতিতে ঠান্ডা বাতাস বুকের এপাশ থেকে ওপাশ করে চলে যায়। আসলে প্রিয়ো হয়তো তেমাকে পাবোনা কোনদিন নিজের করে। হয়তো তোমার মনে কোনদিনই নিজের জায়গাটা করতে পারবোনা। কিন্তু তুমি আছো আমার আর থাকবে।🌼
-	</p>
-
-
-										<div class="we-video-info">
-											<ul>
-												<li>
-													<span class="views" data-toggle="tooltip" title="views">
-														<i class="fa fa-eye"></i>
-														<ins>1.2k</ins>
-													</span>
-												</li>
-												<li>
-													<span class="comment" data-toggle="tooltip" title="Comments">
-														<i class="fa fa-comments-o"></i>
-														<ins>52</ins>
-													</span>
-												</li>
-												<li>
-													<span class="like" data-toggle="tooltip" title="like">
-														<i class="ti-heart"></i>
-														<ins>2.2k</ins>
-													</span>
-												</li>
-												
-												<li class="social-media">
-													<div class="menu">
-													  <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
-													  <div class="rotater">
-														<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-html5"></i></a></div>
-													  </div>
-													  <div class="rotater">
-														<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-facebook"></i></a></div>
-													  </div>
-													  <div class="rotater">
-														<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-google-plus"></i></a></div>
-													  </div>
-													  <div class="rotater">
-														<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-twitter"></i></a></div>
-													  </div>
-													  <div class="rotater">
-														<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-css3"></i></a></div>
-													  </div>
-													  <div class="rotater">
-														<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-instagram"></i></a>
-														</div>
-													  </div>
-														<div class="rotater">
-														<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-dribbble"></i></a>
-														</div>
-													  </div>
-													  <div class="rotater">
-														<div class="btn btn-icon"><a href="#" title=""><i class="fa fa-pinterest"></i></a>
-														</div>
-													  </div>
-
-													</div>
-												</li>
-											</ul>
-										</div>
-										<div class="description">
-											
-											<p>
-												World's most beautiful car in Curabitur <a href="#" title="">#test drive booking !</a> the most beatuiful car available in america and the saudia arabia, you can book your test drive by our official website
-											</p>
-										</div>
-									</div>
-								</div>
+					<div class=" body_back">
+						<div class="log-reg-area  dynamic_box parkinsans ">
 							
-								
-								
-								</div>
-							</div><!-- centerl meta -->
-							<div class="col-lg-3">
-								<aside class="sidebar static">
-									<div class="widget">
-										<h4 class="widget-title">Your page</h4>	
-										<div class="your-page">
-										
-											<div class="page-meta">
-												<a href="#" title="" class="underline">My page</a>
-												<span><i class="ti-comment"></i><a href="insight.html" title="">Messages <em>9</em></a></span>
-												<span><i class="ti-bell"></i><a href="insight.html" title="">Notifications <em>2</em></a></span>
-											</div>
-											<div class="page-likes">
-												<ul class="nav nav-tabs likes-btn">
-													<li class="nav-item"><a class="active" href="#link1" data-toggle="tab">likes</a></li>
-													 <li class="nav-item"><a class="" href="#link2" data-toggle="tab">views</a></li>
-												</ul>
-												<!-- Tab panes -->
-												<div class="tab-content">
-												  <div class="tab-pane active fade show " id="link1" >
-													<span><i class="ti-heart"></i>884</span>
-													  <a href="#" title="weekly-likes">35 new likes this week</a>
-													
-												  </div>
-												  <div class="tab-pane fade" id="link2" >
-													  <span><i class="ti-eye"></i>440</span>
-													  <a href="#" title="weekly-likes">440 new views this week</a>
-													  <div class="users-thumb-list">
-														<a href="#" title="Anderw" data-toggle="tooltip">
-															<img src="images/resources/userlist-1.jpg" alt="">  
-														</a>
-														<a href="#" title="frank" data-toggle="tooltip">
-															<img src="images/resources/userlist-2.jpg" alt="">  
-														</a>
-														<a href="#" title="Sara" data-toggle="tooltip">
-															<img src="images/resources/userlist-3.jpg" alt="">  
-														</a>
-														<a href="#" title="Amy" data-toggle="tooltip">
-															<img src="images/resources/userlist-4.jpg" alt="">  
-														</a>
-														<a href="#" title="Ema" data-toggle="tooltip">
-															<img src="images/resources/userlist-5.jpg" alt="">  
-														</a>
-														<a href="#" title="Sophie" data-toggle="tooltip">
-															<img src="images/resources/userlist-6.jpg" alt="">  
-														</a>
-														<a href="#" title="Maria" data-toggle="tooltip">
-															<img src="images/resources/userlist-7.jpg" alt="">  
-														</a>  
-													  </div>
-												  </div>
-												</div>
-											</div>
-										</div>
-									</div><!-- page like widget -->
-									<div class="widget">
-										<div class="banner medium-opacity bluesh">
-											<div class="bg-image" style="background-image: url(images/resources/baner-widgetbg.jpg)"></div>
-											<div class="baner-top">
-												<span><img alt="" src="images/book-icon.png"></span>
-												<i class="fa fa-ellipsis-h"></i>
-											</div>
-											<div class="banermeta">
-												<p>
-													Find your own jonra .
-												</p>
-												<span>Allawys be creative</span>
-												<a data-ripple="" title="" href="#">start now!</a>
-											</div>
-										</div>											
-									</div>
-									<!-- friends list sidebar -->
-								</aside>
-							</div><!-- sidebar -->
-						</div>	
-					</div>
-				</div>
-			</div>
-		</div>	
-	</section>
-
-	<footer>
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-4 col-md-4">
-					<div class="widget">
-						<div class="foot-logo">
-							<div class="logo">
-								<a href="index-2.html" title=""><img src="images/logo12.png" class="img-thumbnail" alt=""></a>
-							</div>	
-							<p>
-								The trio took this simple idea and built it into the world’s leading carpooling platform.
-							</p>
-						</div>
-						<ul class="location">
-							<li>
-								<i class="ti-map-alt"></i>
-								<p>33 new montgomery st.750 san francisco, CA USA 94105.</p>
-							</li>
-							<li>
-								<i class="ti-mobile"></i>
-								<p>+8801750605475</p>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4">
-					<div class="widget">
-						<div class="widget-title"><h4>follow</h4></div>
-						<ul class="list-style">
-							<li><i class="fa fa-facebook-square"></i> <a href="https://web.facebook.com/shopcircut/" title="">facebook</a></li>
-							<li><i class="fa fa-twitter-square"></i><a href="https://twitter.com/login?lang=en" title="">twitter</a></li>
-							<li><i class="fa fa-instagram"></i><a href="https://www.instagram.com/?hl=en" title="">instagram</a></li>
-							<li><i class="fa fa-google-plus-square"></i> <a href="https://plus.google.com/discover" title="">Google+</a></li>
-							<li><i class="fa fa-pinterest-square"></i> <a href="https://www.pinterest.com/" title="">Pintrest</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4">
-					<div class="widget">
-						<div class="widget-title"><h4>Navigate</h4></div>
-						<ul class="list-style">
-							<li><a href="about.html" title="">about us</a></li>
-							<li><a href="contact.html" title="">contact us</a></li>
-							<li><a href="terms.html" title="">terms & Conditions</a></li>
-							<li><a href="#" title="">RSS syndication</a></li>
-							<li><a href="sitemap.html" title="">Sitemap</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4">
-					<div class="widget">
-						<div class="widget-title"><h4>useful links</h4></div>
-						<ul class="list-style">
-							<li><a href="#" title="">leasing</a></li>
-							<li><a href="#" title="">submit route</a></li>
-							<li><a href="#" title="">how does it work?</a></li>
-							<li><a href="#" title="">agent listings</a></li>
-							<li><a href="#" title="">view All</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4">
-					<div class="widget">
-						<div class="widget-title"><h4>download apps</h4></div>
-						<ul class="colla-apps">
-							<li><a href="https://play.google.com/store?hl=en" title=""><i class="fa fa-android"></i>android</a></li>
-							<li><a href="https://www.apple.com/lae/ios/app-store/" title=""><i class="ti-apple"></i>iPhone</a></li>
-							<li><a href="https://www.microsoft.com/store/apps" title=""><i class="fa fa-windows"></i>Windows</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</footer><!-- footer -->
-	
-</div>
-	<div class="side-panel">
-			<h4 class="panel-title">General Setting</h4>
-			<form method="post">
-				<div class="setting-row">
-					<span>use night mode</span>
-					<input type="checkbox" id="nightmode1"/> 
-					<label for="nightmode1" data-on-label="ON" data-off-label="OFF"></label>
-				</div>
-				<div class="setting-row">
-					<span>Notifications</span>
-					<input type="checkbox" id="switch22" /> 
-					<label for="switch22" data-on-label="ON" data-off-label="OFF"></label>
-				</div>
-				<div class="setting-row">
-					<span>Notification sound</span>
-					<input type="checkbox" id="switch33" /> 
-					<label for="switch33" data-on-label="ON" data-off-label="OFF"></label>
-				</div>
-				<div class="setting-row">
-					<span>My profile</span>
-					<input type="checkbox" id="switch44" /> 
-					<label for="switch44" data-on-label="ON" data-off-label="OFF"></label>
-				</div>
-				<div class="setting-row">
-					<span>Show profile</span>
-					<input type="checkbox" id="switch55" /> 
-					<label for="switch55" data-on-label="ON" data-off-label="OFF"></label>
-				</div>
-				<ul>
+							<div id="text1" class="dynamic-text"></div>
+							<br>
+							<div id="text2" class="dynamic-text"></div>
+							<script>
+								// Text strings
+								const text1 = "If you think you can,";
+								const text2 = "you will can......";
 						
-					<li><a href="landing.html" title="">Login page</a></li>
-					<li><a href="landing.html" title="">Logout Page</a></li>
+								let index1 = 0;
+								let index2 = 0;
+						
+								// Function to update the text one character at a time
+								function animateText() {
+									if (index1 < text1.length) {
+										document.getElementById("text1").innerHTML += text1.charAt(index1);
+										index1++;
+									} else {
+										document.getElementById("text2").innerHTML += text2.charAt(index2);
+										index2++;
+									}
+						
+									// Repeat the animation continuously
+									if (index1 < text1.length || index2 < text2.length) {
+										setTimeout(animateText, 100); // Adjust the speed of typing (100 ms)
+									} else {
+										index1 = 0;  // Reset for text1
+										index2 = 0;  // Reset for text2
+										document.getElementById("text1").innerHTML = "";
+										document.getElementById("text2").innerHTML = "";
+										setTimeout(animateText, 1000); // Delay before restarting
+									}
+								}
+						
+								// Start the animation
+								animateText();
+							</script>
+		
+						</div>
+						
+								</div>
+				</div>
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 body_back ">
 			
-				</ul>
-			</form>
+				<div class="container-fluid d-flex flex-column h-100">
+					<!-- Top Empty Row -->
+					<div class="row"></div>
 			
-		</div><!-- side panel -->		
+					<!-- Middle Row with White Box -->
+					<div class="row d-flex align-items-center justify-content-center">
+						<div class="col-md-4  col-lg-10">
+							<div class="box">
+								<h2>Welcome</h2>
+								<p>Don't Think To Much Just Start Your Day.</p>
+							<a href="../uploads/login.php">	<button class="btn btn-custom btn-login">Login</button></a>
+							<a href="../uploads/register.php">	<button class="btn btn-custom btn-signup">Signup</button></a>
+                            <br>
+                            <a href="index.php">	<button class="btn btn-custom btn-login vstr">visitor</button></a>
+
+                        </div>
+						</div>
+					</div>
+			
+					<!-- Bottom Empty Row -->
+					<div class="row">
+						
+						
+						<div class="land-meta ">
+							
+							<a href="landing.html">	<div class="friend-logo ">
+									<span></span>
+									
+								</div>
+								</a>
+			
+							</div>	
+							
+						<div class="">
+					
+					
+
+						
+					</div></div>
+				</div>
+			
+			
+			
+			
+			
+			
+				
+						
+					</div>
+				</div>
+			</div>
+		
+		
+			<div class="footer_back">
+				<div class="card-footer text-center  ">
+					<div class="row ">
+						<div class="col footer-design ">
+							<img src="./images/chillax.png" alt="User 1" class="rounded-circle" width="250px">
+							<p class="text-muted">Terms of Use | Privacy Policy | Developers | Contact | About</p>
+							<p class="text-muted">Copyright © Company - All rights reserved</p>
+						</div>
+						
+						</div>
+	
+				</div>
+			</div>
+		
+		
+		
+		</div>
+	
+
 	
 	<script data-cfasync="false" src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/main.min.js"></script>
 	<script src="js/script.js"></script>
-	<script src="js/map-init.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
 </body>	
 
