@@ -1,0 +1,148 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Post Form */
+.post-form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    
+}
+
+.post-form textarea {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+    height: 80px;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+}
+
+.post-buttons {
+    width: 15%;
+    padding: 10px;
+    margin-left: 10px;
+    background: red none repeat scroll 0 0 !important;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+button.post-buttons {
+    background: red !important;
+    color: white;
+    padding: 7px 34px;
+}
+.post-buttons:hover {
+    color: #fff;
+    background: green none repeat scroll 0 0 !important;
+}
+
+/* Blog Post */
+.post-container {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.post-header h2 {
+    font-size: 20px;
+    color: #333;
+    margin: 0;
+}
+
+.post-header .publish-date {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.post-title h1 {
+    font-size: 28px;
+    color: #444;
+    margin: 20px 0;
+}
+
+.post-content p {
+    line-height: 1.6;
+    color: #333;
+    font-size: 16px;
+}
+
+.post-footer {
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    padding-top: 10px;
+}
+
+.likes-comments span {
+    margin-right: 15px;
+    font-size: 14px;
+    color: #555;
+}
+
+.share-icon {
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Footer Advertisement */
+.footer-ad {
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    background-color: #f3f3f3;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.footer-ad span {
+    color: #007bff;
+    font-weight: bold;
+}
+
+
+
+ .input-group input {
+    width: 60%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    gap: 10px;
+    margin-bottom: 10px;
+} 
+
+
+.like-button {
+    color: #fff;
+    background-color: #ff4757;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.like-button:hover {
+    background-color: #e84118;
+}
+.like-form {
+    display: inline;
+}

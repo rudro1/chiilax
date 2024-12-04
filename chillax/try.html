@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full Page Night Mode</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .night-mode {
+      background-color: #121212 !important;
+      color: #ffffff !important;
+    }
+    .night-mode a {
+      color: #bb86fc !important;
+    }
+    .night-mode .btn {
+      background-color: #333333;
+      color: #ffffff;
+    }
+    .night-mode .btn:hover {
+      background-color: #444444;
+    }
+    .night-mode .card {
+      background-color: #1e1e1e;
+      border-color: #444444;
+    }
+  </style>
+</head>
+<body class="bg-light text-dark">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-light navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">BrandName</a>
+      <button id="nightModeToggle" class="btn btn-outline-dark">Enable Night Mode</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="container mt-4">
+    <h1>Welcome!</h1>
+    <p>This is a demo of full-page night mode. Click the "Enable Night Mode" button to switch modes.</p>
+
+    <!-- Example Card -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Card Title</h5>
+        <p class="card-text">This is some example content inside a card. Night mode also affects this.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+
+    <!-- Example Section -->
+    <section style="height: 1000px;">
+      <p>Scroll down to see more content affected by the night mode toggle.</p>
+    </section>
+  </main>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const body = document.body;
+    const nightModeToggle = document.getElementById('nightModeToggle');
+
+    nightModeToggle.addEventListener('click', () => {
+      const isNightMode = body.classList.toggle('night-mode');
+      nightModeToggle.textContent = isNightMode ? 'Disable Night Mode' : 'Enable Night Mode';
+    });
+  </script>
+</body>
+</html>
